@@ -1,0 +1,5 @@
+/target
+/AppDir/usr
+/cache
+/*.AppImage
+/*.AppImage.sha256

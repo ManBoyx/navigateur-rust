@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Navigateur Rust
+Comment=Un navigateur web léger (GTK 3 + WebKitGTK), écrit en Rust
+Exec=navigateur-rust %U
+Icon=navigateur-rust
+Categories=Network;WebBrowser;
+Terminal=false

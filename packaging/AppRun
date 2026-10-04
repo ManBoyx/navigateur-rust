@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ici="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+exec "$ici/usr/bin/navigateur-rust" "$@"

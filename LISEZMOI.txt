@@ -1,0 +1,26 @@
+Navigateur Rust — code source
+==============================
+
+Un navigateur web (barre d'adresse, précédent/suivant/actualiser/accueil) en Rust, GTK 3 +
+WebKitGTK (le moteur de GNOME Web/Epiphany). Ce n'est pas un moteur de rendu réécrit en Rust :
+ça, c'est plusieurs années de travail d'une grande équipe (voir Servo, chez Mozilla).
+
+Ce dossier contient seulement le CODE SOURCE : cette machine (un serveur sans écran, sans les
+paquets GTK/WebKitGTK, et sans les droits root pour les installer) ne peut ni le compiler ni
+l'exécuter pour le vérifier. Sur ton CachyOS, avec un écran et les paquets système, ça prend deux
+commandes.
+
+Construire (sur CachyOS, ou toute distribution avec GTK 3 et WebKitGTK) :
+    sudo pacman -S gtk3 webkit2gtk-4.1        # si pas déjà installés
+    tools/construire.sh                        # compile (cargo build --release)
+    tools/appimage.sh                           # fabrique Navigateur-Rust-x86_64.AppImage
+
+Il faut aussi Rust (cargo) : https://rustup.rs si tu ne l'as pas.
+
+GTK 3 et WebKitGTK ne sont PAS embarqués dans l'AppImage (les embarquer avec toutes leurs
+dépendances ferait des centaines de Mo, fragiles aux mises à jour de sécurité) : ils doivent être
+installés sur le système, comme pour n'importe quelle appli GTK (GNOME Web, par exemple).
+
+Si `tools/construire.sh` échoue à la compilation (les crates gtk/webkit2gtk sont sensibles à la
+version exacte de WebKitGTK installée), dis-moi le message d'erreur : c'est réparable, juste pas
+vérifiable d'ici.

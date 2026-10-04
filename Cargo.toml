@@ -1,0 +1,16 @@
+[package]
+name = "navigateur-rust"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "navigateur-rust"
+path = "src/main.rs"
+
+[dependencies]
+gtk = "0.18"
+webkit2gtk = "2.0"
+
+[profile.release]
+strip = true
+lto = true

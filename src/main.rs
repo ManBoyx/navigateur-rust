@@ -101,20 +101,34 @@ fn construire_fenetre(app: &Application) {
     fenetre.show_all();
 }
 
-// Ce qui est tapé dans la barre d'adresse : une URL telle quelle, une adresse simple (un point,
-// pas d'espace) complétée en https://, ou sinon une recherche DuckDuckGo.
+// Politique de schémas de la barre d'adresse :
+//   - http://, https://, file:// (fichiers locaux) → ouverts directement ;
+//   - javascript:, data:, vbscript:, blob: → jamais ouverts (ils partent en recherche),
+//     pour qu'un lien collé ne puisse pas exécuter de script ni injecter de contenu ;
+//   - une adresse simple (un point, pas d'espace) → complétée en https:// ;
+//   - tout le reste → recherche DuckDuckGo.
+// Détection des schémas insensible à la casse.
+const SCHEMAS_OUVERTS: [&str; 3] = ["http://", "https://", "file://"];
+const SCHEMAS_REFUSES: [&str; 4] = ["javascript:", "data:", "vbscript:", "blob:"];
+
 fn normaliser(saisie: &str) -> String {
     let s = saisie.trim();
     if s.is_empty() {
         return "about:blank".to_string();
     }
-    if s.starts_with("http://") || s.starts_with("https://") || s.starts_with("file://") {
+    let bas = s.to_ascii_lowercase();
+    let recherche = || format!("https://duckduckgo.com/?q={}", encoder_url(s));
+
+    if SCHEMAS_REFUSES.iter().any(|p| bas.starts_with(p)) {
+        return recherche(); // schéma dangereux : jamais chargé comme page
+    }
+    if SCHEMAS_OUVERTS.iter().any(|p| bas.starts_with(p)) {
         return s.to_string();
     }
     if !s.contains(' ') && s.contains('.') {
         return format!("https://{s}");
     }
-    format!("https://duckduckgo.com/?q={}", encoder_url(s))
+    recherche()
 }
 
 fn encoder_url(s: &str) -> String {
